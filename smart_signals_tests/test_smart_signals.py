@@ -18,7 +18,6 @@ class TestPySignal(TestCase):
 
     def test_py_signal_check_callable(self):
         signal = SmartSignal(str, str)
-        signal.connect(self.flag)
         with self.assertRaises(SmartSignalWrongSlotTypeException):
             signal.connect(1)
 
