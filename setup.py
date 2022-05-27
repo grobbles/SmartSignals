@@ -12,19 +12,23 @@ setuptools.setup(
     version="0.0.0",
     author="Uwe Roder",
     author_email="uweroder@gmail.com",
-    description="A Python library to .",
+    description="The SmartSignal lib is an event driven system similar to QT.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/grobbles/SmartSignals",
     packages=["smart_signals"],
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Topic :: Communications",
-        "Topic :: Internet :: WWW/HTTP",
-        "License :: OSI Approved :: Eclipse Public License 1.0 (EPL-1.0)",
-        "Programming Language :: Python :: 3"
+        "Topic :: Utilities"
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
-    keywords="signals event slot",
+    keywords=["signals", "events", "slot", "qt"],
     install_requires=requirements
 )
