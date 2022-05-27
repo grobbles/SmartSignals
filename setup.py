@@ -7,6 +7,25 @@ requirements = []
 with open("requirements.txt", "r") as requirements_file:
     requirements.append(requirements_file.read())
 
+classifiers = [
+    # How mature is this project? Common values are
+    #   1 - Planning
+    #   2 - Development
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+    'Development Status :: 3 - Alpha',
+    "Intended Audience :: Developers",
+    "Topic :: Communications",
+    "Topic :: Utilities"
+    'License :: OSI Approved :: MIT License',
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+
 setuptools.setup(
     name="SmartSignals",
     version="0.0.0",
@@ -18,23 +37,8 @@ setuptools.setup(
     url="https://github.com/grobbles/SmartSignals",
     packages=["smart_signals"],
     license='MIT',
-    classifiers=[
-        # How mature is this project? Common values are
-        #   3 - Alpha
-        #   4 - Beta
-        #   5 - Production/Stable
-        'Development Status :: 3 - Alpha',
-        "Intended Audience :: Developers",
-        "Topic :: Communications",
-        "Topic :: Utilities"
-        'License :: OSI Approved :: MIT License',
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-    ],
+    classifiers=classifiers,
     python_requires='>=3.7',
-    keywords=["signals", "events", "slot", "qt"],
+    keywords=["smart_signals", "SmartSignals", "signals", "events", "slot", "qt"],
     install_requires=requirements
 )
