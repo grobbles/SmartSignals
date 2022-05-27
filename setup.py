@@ -37,7 +37,7 @@ setuptools.setup(
     url="https://github.com/grobbles/SmartSignals",
     packages=["smart_signals"],
     license='MIT',
-    classifiers=classifiers,
+    # classifiers=classifiers,
     python_requires='>=3.7',
     keywords=["smart_signals", "SmartSignals", "signals", "events", "slot", "qt"],
     install_requires=requirements
