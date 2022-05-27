@@ -1,4 +1,4 @@
-name: CI / CD
+name: CI/CD Test
 
 on: [ push, pull_request ]
 
