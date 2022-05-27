@@ -32,6 +32,6 @@ jobs:
           pytest
       - name: Build coverage file
         run: |
-          coverage run -m
+          coverage run -m pytest
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v2
