@@ -17,18 +17,24 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/grobbles/SmartSignals",
     packages=["smart_signals"],
+    license='MIT',
     classifiers=[
-        "Development Status :: 4 - Beta",
+        # How mature is this project? Common values are
+        #   3 - Alpha
+        #   4 - Beta
+        #   5 - Production/Stable
+        'Development Status :: 3 - Alpha',
         "Intended Audience :: Developers",
         "Topic :: Communications",
         "Topic :: Utilities"
-        "License :: OSI Approved :: MIT License",
+        'License :: OSI Approved :: MIT License',
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
+    python_requires='>=3.7',
     keywords=["signals", "events", "slot", "qt"],
     install_requires=requirements
 )
