@@ -21,6 +21,46 @@ class TestPySignal(TestCase):
         with self.assertRaises(SmartSignalWrongSlotTypeException):
             signal.connect(1)
 
+    def test_py_signal_add_slot(self):
+        def signal_slot():
+            self.flag = True
+            pass
+
+        signal = SmartSignal()
+        signal.connect(signal_slot)
+        assert signal_slot in signal.slots
+
+    def test_py_signal_string(self):
+        def signal_slot():
+            self.flag = True
+            pass
+
+        signal = SmartSignal()
+        signal.connect(signal_slot)
+        assert str(signal) == "PySignal( multithreading: False )"
+
+    def test_py_signal_delete_slot(self):
+        def signal_slot():
+            self.flag = True
+            pass
+
+        signal = SmartSignal()
+        signal.connect(signal_slot)
+        assert signal_slot in signal.slots
+        signal.delete_connection(signal_slot)
+        assert signal_slot not in signal.slots
+
+    def test_py_signal_reset_all_connection(self):
+        def signal_slot():
+            self.flag = True
+            pass
+
+        signal = SmartSignal()
+        signal.connect(signal_slot)
+        assert signal_slot in signal.slots
+        signal.reset()
+        assert signal_slot not in signal.slots
+
     def test_py_signal(self):
         def signal_slot():
             self.flag = True
@@ -30,8 +70,18 @@ class TestPySignal(TestCase):
         signal.connect(signal_slot)
         signal.emit()
 
-        self.assertTrue(self.flag, "The signal is not transmitted or received!!")
-        pass
+        assert self.flag, "The signal is not transmitted or received!!"
+
+    def test_py_signal_multithreading(self):
+        def signal_slot():
+            self.flag = True
+            pass
+
+        signal = SmartSignal(multithreading=True)
+        signal.connect(signal_slot)
+        signal.emit()
+
+        assert self.flag, "The signal is not transmitted or received!!"
 
     def test_py_signal_with_two_slots(self):
         def signal_slot_1():
@@ -146,6 +196,18 @@ class TestPySignal(TestCase):
         with self.assertRaises(SmartSignalWrongDataTypeException):
             signal.emit("fuu")
 
+    def test_py_signal_check_emit_type_list__wrong_element_in_list(self):
+        def signal_slot_with_typ_list_of_string(test_message: list):
+            if "fuu" in test_message:
+                self.flag = True
+            pass
+
+        signal = SmartSignal(List[str])
+        signal.connect(signal_slot_with_typ_list_of_string)
+
+        with self.assertRaises(SmartSignalWrongDataTypeException):
+            signal.emit(["fuu", 1])
+
     def test_py_signal_check_emit_type_dict(self):
         def signal_slot_with_typ_list_of_string(test_message):
             if {"fuu": "faa"} == test_message:
@@ -240,103 +302,3 @@ class TestPySignal(TestCase):
 
         with self.assertRaises(SmartSlotWrongDataTypeException):
             signal.emit("message")
-
-    # def test_wrong_typ_definition(self):
-    #     def signal_slot_with_typ_list_of_string(test_message: list):
-    #         if "test_py_signal_with_string" in test_message:
-    #             self.flag = True
-    #         pass
-    #
-    #     signal = PySignal(str)
-    #     signal.connect(signal_slot_with_typ_list_of_string)
-    #
-    #     with self.assertRaises(ValueError):
-    #         signal.emit(["test_py_signal_with_string"])
-    #     pass
-    #
-    # def test_py_slot_decorator_with_typ_definition(self):
-    #
-    #     @PySlotFunction(list)
-    #     def signal_slot_with_typ_list_of_string(test_message: list):
-    #         if "test_py_signal_with_string" in test_message:
-    #             self.flag = True
-    #         pass
-    #
-    #     signal = PySignal(list)
-    #     signal.connect(signal_slot_with_typ_list_of_string)
-    #     signal.emit(["test_py_signal_with_string"])
-    #
-    #     self.assertTrue(self.flag, "The signal is not transmitted or received!!")
-    #     pass
-    #
-    # def test_py_slot_decorator_with_class_typ_definition(self):
-    #     class Test:
-    #         flag = False
-    #
-    #         @PySlot(list)
-    #         def signal_slot_with_typ_list_of_string(self, test_message: list):
-    #             if "test_py_signal_with_string" in test_message:
-    #                 self.flag = True
-    #             pass
-    #
-    #     test = Test()
-    #
-    #     signal = PySignal(list)
-    #     signal.connect(test.signal_slot_with_typ_list_of_string)
-    #     signal.emit(["test_py_signal_with_string"])
-    #
-    #     self.assertTrue(test.flag, "The signal is not transmitted or received!!")
-    #     pass
-    #
-    # def test_py_slot_decorator_with_class_typ_definition__(self):
-    #     class Test:
-    #         flag = False
-    #
-    #         @PySlot(list, str)
-    #         def signal_slot_with_typ_list_of_string(self, test_message: list, message: str):
-    #             if "testListMessage" in test_message and message == 'testMessage':
-    #                 self.flag = True
-    #             pass
-    #
-    #     test = Test()
-    #
-    #     signal = PySignal(list, str, multithreading=False)
-    #     signal.connect(test.signal_slot_with_typ_list_of_string)
-    #     signal.emit(["testListMessage"], 'testMessage')
-    #
-    #     self.assertTrue(test.flag, "The signal is not transmitted or received!!")
-    #     pass
-    #
-    # def test_py_slot_decorator_with_class_wrong_typ_definition(self):
-    #     class Test:
-    #         flag = False
-    #
-    #         @PySlot(str)
-    #         def signal_slot_with_typ_list_of_string(self, test_message: list):
-    #             if "test_py_signal_with_string" in test_message:
-    #                 self.flag = True
-    #             pass
-    #
-    #     test = Test()
-    #
-    #     signal = PySignal(typ=list, multithreading=False)
-    #     signal.connect(test.signal_slot_with_typ_list_of_string)
-    #
-    #     with self.assertRaises(ValueError):
-    #         signal.emit(["test_py_signal_with_string"])
-    #     pass
-    #
-    # def test_py_slot_decorator_with_wrong_typ_definition(self):
-    #
-    #     @PySlotFunction(str)
-    #     def signal_slot_with_typ_list_of_string(test_message: list):
-    #         if "test_py_signal_with_string" in test_message:
-    #             self.flag = True
-    #         pass
-    #
-    #     signal = PySignal(typ=list, multithreading=False)
-    #     signal.connect(signal_slot_with_typ_list_of_string)
-    #
-    #     with self.assertRaises(ValueError):
-    #         signal.emit(["test_py_signal_with_string"])
-    #     pass

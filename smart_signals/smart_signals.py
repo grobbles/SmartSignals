@@ -1,4 +1,5 @@
 import inspect
+import sys
 import threading
 from typing import List, _GenericAlias
 
@@ -31,7 +32,7 @@ class SmartSignalSlot:
     def __call__(self, method):
         def wrapped_f(*args, **kwargs):
             if len(args[1:]) != len(self._slot_types):
-                raise SmartSlotWrongDataTypeException(f"The number of input parameters: {len(args[1:])} does not match those in the slot definition: {len(self._slot_types)}.")
+                raise SmartSlotWrongDataTypeException(f"The number of input parameters: {len(args[1:])} does not match those in the slot definition: {len(self._slot_types)}!")
 
             if self._slot_types is not None:
                 for index, slot_types in enumerate(self._slot_types):
@@ -57,7 +58,24 @@ class SmartSignal:
         pass
 
     def __str__(self) -> str:
-        return f"PySignal({self.__repr__()}, slot: {self._slots})"
+        elements = list()
+        if self._name:
+            elements.append(f"name: {self._name})")
+        elements.append(f"multithreading: {self._multithreading}")
+        return f"PySignal( {', '.join(elements)} )"
+
+    @classmethod
+    def _get_sender(cls):
+        """Try to get the bound, class or module method calling the emit."""
+        prev_frame = sys._getframe(2)
+        func_name = prev_frame.f_code.co_name
+
+        # Faster to try/catch than checking for 'self'
+        try:
+            return getattr(prev_frame.f_locals['self'], func_name)
+
+        except KeyError:
+            return getattr(inspect.getmodule(prev_frame), func_name)
 
     @property
     def slots(self):
@@ -73,7 +91,7 @@ class SmartSignal:
     def emit(self, *args, **kwargs):
         if self._slot_types is not None:
             if len(args) != len(self._slot_types):
-                raise SmartSignalWrongDataTypeException("Connection to non-callable '{}' object failed")
+                raise SmartSignalWrongDataTypeException(f"The number of input parameters: {len(args)} does not match those in the slot definition: {len(self._slot_types)}!")
 
             for index, slot_type in enumerate(self._slot_types):
                 if isinstance(slot_type, _GenericAlias):
@@ -82,22 +100,22 @@ class SmartSignal:
 
                     container = args[index]
                     if not isinstance(container, container_types):
-                        raise SmartSignalWrongDataTypeException("Connection to non-callable '{}' object failed")
+                        raise SmartSignalWrongDataTypeException(f"The container type: '{type(container)}' is incorrect, this type is expected: '{container_types}'")
 
                     if container_types == list:
                         for element in container:
                             if not isinstance(element, inner_types):
-                                raise SmartSignalWrongDataTypeException("Connection to non-callable '{}' object failed")
+                                raise SmartSignalWrongDataTypeException(f"The list element: '{element}' is not the expected type: '{inner_types}'!!")
 
                     elif container_types == dict:
                         for key, value in container.items():
                             if not isinstance(key, inner_types[0]):
-                                raise SmartSignalWrongDataTypeException("Connection to non-callable '{}' object failed")
+                                raise SmartSignalWrongDataTypeException(f"The dict key: '{key}' is not the expected key type: '{inner_types[0]}'!!")
                             if not isinstance(value, inner_types[1]):
-                                raise SmartSignalWrongDataTypeException("Connection to non-callable '{}' object failed")
+                                raise SmartSignalWrongDataTypeException(f"The dict value: '{value}' is not the expected value type: '{inner_types[1]}'!!")
                 else:
                     if not isinstance(args[index], slot_type):
-                        raise SmartSignalWrongDataTypeException("Connection to non-callable '{}' object failed")
+                        raise SmartSignalWrongDataTypeException(f"An element in the list is of the wrong data type")
 
         if self._multithreading:
             emit_thread = threading.Thread(target=self._emit_thread_runner, args=args, kwargs=kwargs)
@@ -109,9 +127,6 @@ class SmartSignal:
 
     def _emit_thread_runner(self, *args, **kwargs):
         for slot in self._slots:
-            if not callable(slot):
-                raise SmartSignalWrongSlotTypeException(f"The solt: '{slot.__class__.__name__}' is not a callable object!!!")
-
             slot(*args, **kwargs)
         pass
 
