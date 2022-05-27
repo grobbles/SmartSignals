@@ -3,16 +3,20 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+requirements = []
+with open("requirements.txt", "r") as requirements_file:
+    requirements.append(requirements_file.read())
+
 setuptools.setup(
     name="SmartSignals",
-    version="1.0.0",
+    version="0.0.0",
     author="Uwe Roder",
     author_email="uweroder@gmail.com",
-    description="A Python library to interact with the Emitter API.",
+    description="A Python library to .",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://emitter.io",
-    packages=["emitter"],
+    url="https://github.com/grobbles/SmartSignals",
+    packages=["smart_signals"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -21,6 +25,6 @@ setuptools.setup(
         "License :: OSI Approved :: Eclipse Public License 1.0 (EPL-1.0)",
         "Programming Language :: Python :: 3"
     ],
-    keywords="emitter mqtt realtime cloud service",
-    install_requires=["paho-mqtt"]
+    keywords="signals event slot",
+    install_requires=requirements
 )

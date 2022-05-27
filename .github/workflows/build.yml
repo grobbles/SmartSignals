@@ -1,4 +1,4 @@
-name: Python package
+name: CI / CD
 
 on: [push, pull_request]
 
@@ -32,8 +32,6 @@ jobs:
           pytest
       - name: Build coverage file
         run: |
-          pytest --cache-clear --cov=app smart_signals_tests/ > pytest-coverage.txt
-      - name: Comment coverage
-        uses: coroo/pytest-coverage-commentator@v1.0.2
-        with:
-          pytest-coverage: pytest-coverage.txt
+          coverage run -m pytest
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v2
