@@ -39,7 +39,7 @@ class TestPySignal(TestCase):
         signal.connect(signal_slot)
         assert str(signal) == "PySignal( multithreading: False )"
 
-    def test_py_signal_delete_slot(self):
+    def test_py_signal_disconnect(self):
         def signal_slot():
             self.flag = True
             pass
@@ -47,8 +47,15 @@ class TestPySignal(TestCase):
         signal = SmartSignal()
         signal.connect(signal_slot)
         assert signal_slot in signal.slots
-        signal.delete_connection(signal_slot)
+        assert signal.disconnect(signal_slot)
         assert signal_slot not in signal.slots
+
+    def test_py_signal_try_disconnect(self):
+        def signal_slot():
+            pass
+
+        signal = SmartSignal()
+        assert not signal.disconnect(signal_slot)
 
     def test_py_signal_reset_all_connection(self):
         def signal_slot():

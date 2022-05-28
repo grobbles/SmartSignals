@@ -19,7 +19,14 @@ with open("requirements.txt", "r") as requirements_file:
     # "Topic :: Communications",
     # "Topic :: Utilities"
     # "Programming Language :: Python",
+
 classifiers = [
+    'License :: OSI Approved :: MIT License',
+    'Development Status :: 3 - Alpha',
+    "Intended Audience :: Developers",
+    "Topic :: Communications",
+    "Topic :: Utilities",
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -28,7 +35,7 @@ classifiers = [
 
 setuptools.setup(
     name="SmartSignals",
-    version="0.0.0",
+    version="0.0.1",
     author="Uwe Roder",
     author_email="uweroder@gmail.com",
     description="The SmartSignal lib is an event driven system similar to QT.",
@@ -37,7 +44,7 @@ setuptools.setup(
     url="https://github.com/grobbles/SmartSignals",
     packages=["smart_signals"],
     license='MIT',
-    # classifiers=classifiers,
+    classifiers=classifiers,
     python_requires='>=3.7',
     keywords=["smart_signals", "SmartSignals", "signals", "events", "slot", "qt"],
     install_requires=requirements

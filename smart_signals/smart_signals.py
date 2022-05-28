@@ -1,5 +1,4 @@
 import inspect
-import sys
 import threading
 from typing import List, _GenericAlias
 
@@ -64,29 +63,27 @@ class SmartSignal:
         elements.append(f"multithreading: {self._multithreading}")
         return f"PySignal( {', '.join(elements)} )"
 
-    @classmethod
-    def _get_sender(cls):
-        """Try to get the bound, class or module method calling the emit."""
-        prev_frame = sys._getframe(2)
-        func_name = prev_frame.f_code.co_name
-
-        # Faster to try/catch than checking for 'self'
-        try:
-            return getattr(prev_frame.f_locals['self'], func_name)
-
-        except KeyError:
-            return getattr(inspect.getmodule(prev_frame), func_name)
-
     @property
     def slots(self):
         return self._slots
 
     def reset(self):
         self._slots = []
+        pass
 
-    def delete_connection(self, slot):
+    def connect(self, slot):
+        if not callable(slot):
+            raise SmartSignalWrongSlotTypeException(f"The solt: '{slot.__class__.__name__}' is not a callable object!!!")
+
+        if slot not in self._slots:
+            self._slots.append(slot)
+        pass
+
+    def disconnect(self, slot) -> bool:
         if slot in self._slots:
             self._slots.remove(slot)
+            return True
+        return False
 
     def emit(self, *args, **kwargs):
         if self._slot_types is not None:
@@ -128,12 +125,4 @@ class SmartSignal:
     def _emit_thread_runner(self, *args, **kwargs):
         for slot in self._slots:
             slot(*args, **kwargs)
-        pass
-
-    def connect(self, slot):
-        if not callable(slot):
-            raise SmartSignalWrongSlotTypeException(f"The solt: '{slot.__class__.__name__}' is not a callable object!!!")
-
-        if slot not in self._slots:
-            self._slots.append(slot)
         pass
