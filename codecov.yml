@@ -4,3 +4,5 @@ coverage:
       default:
         target: 100%
         threshold: 15%
+ignore:
+  - "smart_signals_tests"

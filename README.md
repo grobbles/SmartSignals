@@ -1,10 +1,11 @@
 # Smart Signals
 
-![Build](https://github.com/grobbles/SmartSignals/actions/workflows/test.yml/badge.svg)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Build](https://github.com/grobbles/SmartSignals/actions/workflows/release.yml/badge.svg)
 [![codecov](https://codecov.io/gh/grobbles/SmartSignals/branch/main/graph/badge.svg?token=GAHKYKS1SD)](https://codecov.io/gh/grobbles/SmartSignals)
+[![PyPi version](https://badgen.net/pypi/v/SmartSignals/)](https://pypi.com/project/SmartSignals)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# Install 
+# Install
 
 You can install this package with pip from PyPi.
 
@@ -15,13 +16,15 @@ pip install SmartSignals
 # Usage
 
 ````python
-from smart_signals import *
+from smart_signals import SmartSignal, SmartSignalSlot
+
 
 class Test:
     @SmartSignalSlot(str)
     def slot(self, message: str):
         print(message)
         pass
+
 
 test = Test()
 signal = SmartSignal(str)
