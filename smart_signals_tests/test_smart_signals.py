@@ -37,7 +37,11 @@ class TestPySignal(TestCase):
 
         signal = SmartSignal()
         signal.connect(signal_slot)
-        assert str(signal) == "PySignal( multithreading: False )"
+        assert str(signal) == "PySignal( multithreading: 'False' )"
+
+        signal = SmartSignal(name="TestSignal")
+        signal.connect(signal_slot)
+        assert str(signal) == "PySignal( name: 'TestSignal', multithreading: 'False' )"
 
     def test_py_signal_disconnect(self):
         def signal_slot():

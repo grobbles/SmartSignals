@@ -18,6 +18,11 @@ class SmartSlotWrongDataTypeException(Exception):
 class SmartSignalSlot:
 
     def __init__(self, *args):
+        """
+        Constructor for the SmartSignalSlot
+
+        :param args: The list of data types for slot
+        """
         self._slot_types = args
         self._owner = self._get_owner()
         pass
@@ -47,6 +52,13 @@ class SmartSignal:
     signal_lock = threading.RLock()
 
     def __init__(self, *args, name: str = None, multithreading: bool = False):
+        """
+        Constructor for the Smart Signal
+
+        :param args: The list of data types to be transferred.
+        :param name: The name of the signal for logging
+        :param multithreading: The multithreading flag to enable multi threading
+        """
         self._name = name
         self._multithreading = multithreading
         self._slot_types = args
@@ -57,21 +69,42 @@ class SmartSignal:
         pass
 
     def __str__(self) -> str:
+        """
+        Generate the SmartSignal string
+
+        :return: The SmartSignal string
+        """
         elements = list()
         if self._name:
-            elements.append(f"name: {self._name})")
-        elements.append(f"multithreading: {self._multithreading}")
+            elements.append(f"name: '{self._name}'")
+        elements.append(f"multithreading: '{self._multithreading}'")
         return f"PySignal( {', '.join(elements)} )"
 
     @property
     def slots(self):
+        """
+        Return the connected slots
+
+        :return: A list of connected slots
+        """
         return self._slots
 
     def reset(self):
+        """
+        Resets all connected slots.
+
+        :return: None
+        """
         self._slots = []
         pass
 
     def connect(self, slot):
+        """
+        Connects the slot to the smart signal.
+
+        :param slot: The slot must be a callable object.
+        :return: None
+        """
         if not callable(slot):
             raise SmartSignalWrongSlotTypeException(f"The solt: '{slot.__class__.__name__}' is not a callable object!!!")
 
@@ -80,12 +113,26 @@ class SmartSignal:
         pass
 
     def disconnect(self, slot) -> bool:
+        """
+        Disconnects the slot from the smart signal.
+
+        :param slot: The solt to be disconnected.
+        :return: If the slot could be disconnected, then return True, otherwise return False
+        """
         if slot in self._slots:
             self._slots.remove(slot)
             return True
         return False
 
     def emit(self, *args, **kwargs):
+        """
+        Calls all connected slots and passes them the args and the kwargs. This function check the types.
+        If the multithreading flag has been set, then a thread is created for emitting.
+
+        :param args: Args to emit to the slots
+        :param kwargs: Kwargs to emit to the slots
+        :return: None
+        """
         if self._slot_types is not None:
             if len(args) != len(self._slot_types):
                 raise SmartSignalWrongDataTypeException(f"The number of input parameters: {len(args)} does not match those in the slot definition: {len(self._slot_types)}!")
