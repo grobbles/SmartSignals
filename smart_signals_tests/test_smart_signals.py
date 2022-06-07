@@ -1,8 +1,13 @@
+import logging
+import time
 import typing
 from typing import List
 from unittest import TestCase
 
 from smart_signals.smart_signals import SmartSignal, SmartSignalWrongDataTypeException, SmartSignalSlot, SmartSlotWrongDataTypeException, SmartSignalWrongSlotTypeException
+
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s | %(levelname)-10.10s | %(name)-30.30s | %(message)s")
+log = logging.getLogger()
 
 
 class TestPySignal(TestCase):
@@ -91,7 +96,7 @@ class TestPySignal(TestCase):
         signal = SmartSignal(multithreading=True)
         signal.connect(signal_slot)
         signal.emit()
-
+        time.sleep(1)
         assert self.flag, "The signal is not transmitted or received!!"
 
     def test_py_signal_with_two_slots(self):

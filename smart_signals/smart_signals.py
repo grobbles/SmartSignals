@@ -1,5 +1,7 @@
 import inspect
+import logging
 import threading
+import types
 from typing import List, _GenericAlias
 
 
@@ -18,6 +20,7 @@ class SmartSlotWrongDataTypeException(Exception):
 class SmartSignalSlot:
 
     def __init__(self, *args):
+        self._log = logging.getLogger()
         """
         Constructor for the SmartSignalSlot
 
@@ -59,13 +62,13 @@ class SmartSignal:
         :param name: The name of the signal for logging
         :param multithreading: The multithreading flag to enable multi threading
         """
+        self._log = logging.getLogger('SmartSignal')
         self._name = name
         self._multithreading = multithreading
         self._slot_types = args
         self._slots = []
 
         self._emit_thread: List[threading.Thread] = []
-
         pass
 
     def __str__(self) -> str:
@@ -171,5 +174,12 @@ class SmartSignal:
 
     def _emit_thread_runner(self, *args, **kwargs):
         for slot in self._slots:
+            try:
+                if isinstance(slot, types.MethodType):
+                    self._log.debug(f"emit signal from: {inspect.stack()[2][1]}:{inspect.stack()[2][3]}:{inspect.stack()[2][2]} to slot {slot.__self__}")
+                else:
+                    self._log.debug(f"emit signal from: {inspect.stack()[2][1]}:{inspect.stack()[2][3]}:{inspect.stack()[2][2]} to slot {slot}")
+            except:
+                pass
             slot(*args, **kwargs)
         pass

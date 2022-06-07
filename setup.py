@@ -7,22 +7,15 @@ requirements = []
 with open("requirements.txt", "r") as requirements_file:
     requirements.append(requirements_file.read())
 
-    # How mature is this project? Common values are
     #   1 - Planning
     #   2 - Development
     #   3 - Alpha
     #   4 - Beta
     #   5 - Production/Stable
-    # 'License :: OSI Approved :: MIT License',
-    # 'Development Status :: 3 - Alpha',
-    # "Intended Audience :: Developers",
-    # "Topic :: Communications",
-    # "Topic :: Utilities"
-    # "Programming Language :: Python",
 
 classifiers = [
-    'License :: OSI Approved :: MIT License',
     'Development Status :: 3 - Alpha',
+    'License :: OSI Approved :: MIT License',
     "Intended Audience :: Developers",
     "Topic :: Communications",
     "Topic :: Utilities",
@@ -35,7 +28,7 @@ classifiers = [
 
 setuptools.setup(
     name="SmartSignals",
-    version="0.0.1",
+    version="0.2.0",
     author="Uwe Roder",
     author_email="uweroder@gmail.com",
     description="The SmartSignal lib is an event driven system similar to QT.",
